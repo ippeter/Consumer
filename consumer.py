@@ -11,10 +11,21 @@ strTopicName = os.environ['KAFKA_TOPIC']
 strMongoHost = os.environ['MONGO_SERVICE_HOST']
 strMongoPort = os.environ['MONGO_SERVICE_PORT']
 
+strMongoUser = os.environ['MONGO_USERNAME']
+strMongoPswd = os.environ['MONGO_PASSWORD']
+
 consumer = KafkaConsumer(
-    'numtest',
-     bootstrap_servers=['localhost:9092'],
-     auto_offset_reset='earliest',
-     enable_auto_commit=True,
-     group_id='my-group',
-     value_deserializer=lambda x: loads(x.decode('utf-8')))
+		strTopicName,
+		bootstrap_servers=[strKafkaHost + ':' + strKafkaPort],
+		auto_offset_reset='earliest',
+		enable_auto_commit=True,
+		group_id='demo-group',
+		value_deserializer=lambda x: loads(x.decode('utf-8')))
+
+db_conn = MongoClient('mongodb://' + strMongoUser + ':' + strMongoPswd + '@' + strMongoHost + ':' + strMongoPort)
+
+for message in consumer:
+	message = message.value
+	db_conn.demo.demo.insert_one(message)
+	print(message)
+
