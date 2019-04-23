@@ -22,7 +22,13 @@ consumer = KafkaConsumer(
 		group_id='demo-group',
 		value_deserializer=lambda x: loads(x.decode('utf-8')))
 
-db_conn = MongoClient('mongodb://' + strMongoUser + ':' + strMongoPswd + '@' + strMongoHost + ':' + strMongoPort)
+#
+# DEBUG
+#
+strConnectionString = 'mongodb://' + strMongoUser + ':' + strMongoPswd + '@' + strMongoHost + ':' + strMongoPort
+print(strConnectionString)
+
+db_conn = MongoClient(strConnectionString)
 
 for message in consumer:
 	message = message.value
