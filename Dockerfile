@@ -1,10 +1,10 @@
 FROM python:2.7.16-alpine3.9
 
-WORKDIR /root
+WORKDIR /consumer
 
-RUN pip install kafka-python
-RUN pip install pymongo
+COPY consumer.py .
+COPY requirements.txt .
 
-COPY consumer.py consumer.py
+RUN pip install --upgrade pip && pip install --trusted-host pypi.python.org -r requirements.txt
 
-ENTRYPOINT ["python", "consumer.py"]
+CMD ["python", "consumer.py"]
